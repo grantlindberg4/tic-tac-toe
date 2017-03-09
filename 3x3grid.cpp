@@ -1,26 +1,40 @@
 #include <iostream>
 
 enum Move {
-	X = 'X',
-	O = 'O',
-	None = (char)0
+	X,
+	O,
+	None
 };
 
 class Grid {
 protected:
 	int n;
-	Move* board;
+	char* board;
+	char determine_move(Move move) {
+		switch(move) {
+		    case X:
+				return 'X';
+			case O:
+				return 'O';
+			case None:
+				return ' ';
+			default:
+				return ' ';
+		}
+	}
 public:
 	Grid(int n) : n(n) {
-		board = new Move[n];
+		board = new char[n];
 		std::cout << "Creating Grid" << std::endl;
 	}
 	~Grid() {
 		std::cout << "Deleting Grid" << std::endl;
+		delete(board);
 	}
 	void clear() {
 		for(int i = 0; i < n*n; i++) {
-			this->board[i] = Move::None;
+			char move = determine_move(Move::None);
+			this->board[i] = move;
 		}
 	}
 	void display() {
@@ -30,8 +44,7 @@ public:
 				std::cout << "| ";
 				std::cout << board[j*n + i] << " ";
 			}
-			std::cout << "|";
-			std::cout << std::endl;
+			std::cout << "|" << std::endl;
 		}
 		std::cout << "-------------" << std::endl;
 	}
