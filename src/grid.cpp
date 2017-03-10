@@ -4,6 +4,7 @@
 Grid::Grid(int n) : n(n) {
 	board = new char[n];
 	std::cout << "Creating Grid" << std::endl;
+	clear();
 }
 Grid::~Grid() {
     std::cout << "Deleting Grid" << std::endl;
@@ -12,13 +13,17 @@ Grid::~Grid() {
 
 void Grid::clear() {
 	for(int i = 0; i < n*n; i++) {
-		char move = determine_move(Move::None);
-		set_cell(move, i);
+		set_cell(Move::None, i);
 	}
 }
 
-void Grid::set_cell(char move, int cell) {
-	this->board[cell] = move;
+void Grid::set_cell(Move move, int cell) {
+	char symbol = determine_move(move);
+	this->board[cell] = symbol;
+}
+
+char Grid::get_cell(int cell) {
+	return this->board[cell];
 }
 
 void Grid::display() {

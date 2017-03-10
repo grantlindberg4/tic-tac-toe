@@ -8,14 +8,14 @@ enum Move {
 };
 
 class Grid {
-protected:
+public:
 	int n;
 	char* board;
 	char determine_move(Move move);
-public:
 	Grid(int n);
 	~Grid();
-	void set_cell(char move, int cell);
+	void set_cell(Move move, int cell);
+	char get_cell(int cell);
 	void clear();
 	void display();
 };
