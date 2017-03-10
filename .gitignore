@@ -1,0 +1,6 @@
+*.o
+*.exe
+*.tar
+*.tgz
+*.gz
+build/
