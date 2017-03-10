@@ -13,8 +13,12 @@ Grid::~Grid() {
 void Grid::clear() {
 	for(int i = 0; i < n*n; i++) {
 		char move = determine_move(Move::None);
-		this->board[i] = move;
+		set_cell(move, i);
 	}
+}
+
+void Grid::set_cell(char move, int cell) {
+	this->board[cell] = move;
 }
 
 void Grid::display() {

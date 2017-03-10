@@ -15,6 +15,7 @@ protected:
 public:
 	Grid(int n);
 	~Grid();
+	void set_cell(char move, int cell);
 	void clear();
 	void display();
 };
