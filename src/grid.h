@@ -20,7 +20,7 @@ public:
 	int num_moves;
 	char* board;
 	char determine_move(Move move);
-	bool empty_at(int i);
+	bool empty_at(int row, int col) const;
 	Grid(int n);
 	~Grid();
 	void set_cell(int row, int col, Move move);

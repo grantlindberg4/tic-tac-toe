@@ -276,9 +276,16 @@ void test_tictactoe() {
     test_restart();
 }
 
+void test_game() {
+    TicTacToe game(3);
+    game.run();
+}
+
 int main() {
     // test_grid();
-    test_tictactoe();
+    // test_tictactoe();
+    test_game();
+
     std::cout << "All tests passed!" << std::endl;
 	return 0;
 }

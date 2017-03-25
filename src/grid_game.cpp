@@ -14,7 +14,7 @@ void GridGame::display() const {
 		std::cout << "-------------" << std::endl;
 		for(int j = 0; j < grid.n; j++) {
 			std::cout << "| ";
-			std::cout << grid.board[j*grid.n + i] << " ";
+			std::cout << grid.board[i*grid.n + j] << " ";
 		}
 		std::cout << "|" << std::endl;
 	}

@@ -12,8 +12,8 @@ Grid::~Grid() {
     delete(board);
 }
 
-bool Grid::empty_at(int i) {
-	return !(board[i] == 'X' || board[i] == 'O');
+bool Grid::empty_at(int row, int col) const {
+	return !(board[row*n + col] == 'X' || board[row*n + col] == 'O');
 }
 
 void Grid::clear() {
@@ -26,11 +26,11 @@ void Grid::clear() {
 
 void Grid::set_cell(int row, int col, Move move) {
 	char symbol = determine_move(move);
-	this->board[col*n + row] = symbol;
+	this->board[row*n + col] = symbol;
 }
 
 char Grid::get_cell(int row, int col) const {
-	return this->board[col*n + row];
+	return this->board[row*n + col];
 }
 
 char Grid::determine_move(Move move) {
