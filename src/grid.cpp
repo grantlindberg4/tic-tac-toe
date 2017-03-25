@@ -5,12 +5,10 @@
 Grid::Grid(int n) : n(n) {
 	board = new char[n];
 	num_moves = n*n;
-	std::cout << "Creating Grid" << std::endl;
 	clear();
 }
 
 Grid::~Grid() {
-    std::cout << "Deleting Grid" << std::endl;
     delete(board);
 }
 

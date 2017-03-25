@@ -4,11 +4,9 @@
 #include "tictactoe.h"
 
 TicTacToe::TicTacToe(int n) : GridGame(n) {
-    std::cout << "Creating tictactoe board" << std::endl;
 }
 
 TicTacToe::~TicTacToe() {
-    std::cout << "Deleting tictactoe board" << std::endl;
 }
 
 bool TicTacToe::check_rows(char symbol) const {

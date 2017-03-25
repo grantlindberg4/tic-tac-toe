@@ -4,11 +4,9 @@
 #include "grid_game.h"
 
 GridGame::GridGame(int n) : grid(n) {
-	std::cout << "Creating grid game" << std::endl;
 }
 
 GridGame::~GridGame() {
-	std::cout << "Destroying grid game" << std::endl;
 }
 
 void GridGame::display() const {
