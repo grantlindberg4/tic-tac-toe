@@ -115,9 +115,9 @@ bool TicTacToe::invalid_coordinates(int x, int y) {
     return x < 0 || x > 2 || y < 0 || y > 2;
 }
 
-void TicTacToe::do_turn(Player player) {
+void TicTacToe::do_turn() {
     Move curr_token;
-    switch(player) {
+    switch(whose_turn) {
         case Player::User:
             std::cout << "Your turn" << std::endl;
             curr_token = player_token;
@@ -141,7 +141,7 @@ void TicTacToe::do_turn(Player player) {
         int x, y;
         parser >> x >> y;
         if(parser.fail()) {
-            std::cout << "Incorrect format for selecting a spot."
+            std::cout << "Incorrect format for selecting a spot. "
                       << "Use the format (x y)"
                       << std::endl;
         }
@@ -155,7 +155,7 @@ void TicTacToe::do_turn(Player player) {
                       << std::endl;
         }
         else {
-            place_mark(x, y, player);
+            place_mark(x, y, whose_turn);
             parsing_error = false;
         }
     } while(parsing_error);
@@ -163,22 +163,78 @@ void TicTacToe::do_turn(Player player) {
     grid.num_moves--;
 }
 
+void TicTacToe::configure_turn() {
+    bool invalid_input = true;
+    do {
+        std::cout << "Enter who you wish to go first (player/cpu): ";
+        std::string first_turn;
+        std::getline(std::cin, first_turn);
+        if(first_turn.compare("player") == 0) {
+            whose_turn = Player::User;
+            std::cout << "It will be your turn to start this game"
+                      << std::endl;
+            invalid_input = false;
+        }
+        else if(first_turn.compare("cpu") == 0) {
+            std::cout << "It will be your opponent's turn to start this game"
+                      << std::endl;
+            whose_turn = Player::Opponent;
+            invalid_input = false;
+        }
+        else {
+            std::cout << "You have entered an invalid player. "
+                      << "Please enter 'player' or 'cpu'"
+                      << std::endl;
+        }
+    } while(invalid_input);
+}
+
+void TicTacToe::configure_token() {
+    bool invalid_input = true;
+    do {
+        std::cout << "Enter the token you wish to have (X/O): ";
+        std::string whose_token;
+        std::getline(std::cin, whose_token);
+        if(whose_token.compare("X") == 0) {
+            player_token = Move::X;
+            opponent_token = Move::O;
+            std::cout << "Your token is "
+                      << grid.determine_move(player_token)
+                      << " Your opponent's token is "
+                      << grid.determine_move(opponent_token)
+                      << std::endl;
+            invalid_input = false;
+        }
+        else if(whose_token.compare("O") == 0) {
+            player_token = Move::O;
+            opponent_token = Move::X;
+            invalid_input = false;
+        }
+        else {
+            std::cout << "You have entered an invalid token. "
+                      << "Please enter 'X' or 'O'"
+                      << std::endl;
+        }
+    } while(invalid_input);
+}
+
 void TicTacToe::run() {
     std::cout << "Welcome to tic-tac-toe!" << std::endl;
-    player_token = Move::X;
-    opponent_token = Move::O;
-    turn = Player::User;
+
+    configure_turn();
+    configure_token();
+
     while(grid.num_moves > 0) {
-        do_turn(turn);
+        do_turn();
         display();
         if(get_status() != 3) {
             break;
         }
-        if(turn == Player::User) {
-            turn = Player::Opponent;
+        if(whose_turn == Player::User) {
+            whose_turn = Player::Opponent;
         }
         else {
-            turn = Player::User;
+            whose_turn = Player::User;
         }
     }
 }

@@ -9,11 +9,13 @@ class TicTacToe : public GridGame {
     bool check_diagonals(char move) const;
     bool user_won() const;
     bool opponent_won() const;
-    void do_turn(Player player);
+    void do_turn();
     bool invalid_coordinates(int x, int y);
+    void configure_turn();
+    void configure_token();
     Move player_token;
     Move opponent_token;
-    Player turn;
+    Player whose_turn;
 public:
     TicTacToe(int n);
     ~TicTacToe();
