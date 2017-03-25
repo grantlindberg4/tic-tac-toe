@@ -1,52 +1,61 @@
 #include <iostream>
+
 #include "grid.h"
 
 Grid::Grid(int n) : n(n) {
 	board = new char[n];
+	num_moves = n*n;
 	std::cout << "Creating Grid" << std::endl;
 	clear();
 }
+
 Grid::~Grid() {
     std::cout << "Deleting Grid" << std::endl;
     delete(board);
 }
 
+bool Grid::empty_at(int i) {
+	return !(board[i] == 'X' || board[i] == 'O');
+}
+
 void Grid::clear() {
-	for(int i = 0; i < n*n; i++) {
-		set_cell(Move::None, i);
-	}
-}
-
-void Grid::set_cell(Move move, int cell) {
-	char symbol = determine_move(move);
-	this->board[cell] = symbol;
-}
-
-char Grid::get_cell(int cell) {
-	return this->board[cell];
-}
-
-void Grid::display() {
 	for(int i = 0; i < n; i++) {
-		std::cout << "-------------" << std::endl;
 		for(int j = 0; j < n; j++) {
-			std::cout << "| ";
-			std::cout << board[j*n + i] << " ";
+			set_cell(i, j, Move::None);
 		}
-		std::cout << "|" << std::endl;
 	}
-	std::cout << "-------------" << std::endl;
+}
+
+void Grid::set_cell(int row, int col, Move move) {
+	char symbol = determine_move(move);
+	this->board[col*n + row] = symbol;
+}
+
+char Grid::get_cell(int row, int col) const {
+	return this->board[col*n + row];
 }
 
 char Grid::determine_move(Move move) {
 	switch(move) {
-		case X:
+		case Move::X:
 			return 'X';
-		case O:
+		case Move::O:
 			return 'O';
-		case None:
+		case Move::None:
 			return ' ';
 		default:
 			return ' ';
 	}
+}
+
+bool Grid::is_full() const {
+	for(int i = 0; i < n; i++) {
+		for(int j = 0; j < n; j++) {
+			if(get_cell(i, j) == ' ') {
+				return false;
+			}
+		}
+	}
+
+	return true;
 }

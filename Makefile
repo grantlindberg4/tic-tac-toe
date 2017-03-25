@@ -1,6 +1,6 @@
 CC = clang++
-CPPFLAGS = -Wall -pedantic -g
-OBJS := $(addprefix build/,grid.o)
+CPPFLAGS = -Wall -pedantic -g -std=c++11
+OBJS := $(addprefix build/,grid.o grid_game.o tictactoe.o)
 
 .DEFAULT: all
 
