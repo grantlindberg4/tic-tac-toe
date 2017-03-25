@@ -221,20 +221,44 @@ void TicTacToe::configure_token() {
 void TicTacToe::run() {
     std::cout << "Welcome to tic-tac-toe!" << std::endl;
 
-    configure_turn();
-    configure_token();
+    bool wants_to_play = true;
+    while(wants_to_play) {
+        configure_turn();
+        configure_token();
+        while(grid.num_moves > 0) {
+            do_turn();
+            display();
+            if(get_status() != 3) {
+                break;
+            }
+            if(whose_turn == Player::User) {
+                whose_turn = Player::Opponent;
+            }
+            else {
+                whose_turn = Player::User;
+            }
+        }
 
-    while(grid.num_moves > 0) {
-        do_turn();
-        display();
-        if(get_status() != 3) {
-            break;
-        }
-        if(whose_turn == Player::User) {
-            whose_turn = Player::Opponent;
-        }
-        else {
-            whose_turn = Player::User;
-        }
+        std::cout << "Thanks for playing!" << std::endl;
+
+        bool invalid_input = true;
+        do {
+            std::cout << "Do you wish to play again? (y/n): ";
+            std::string play_status;
+            std::getline(std::cin, play_status);
+            if(play_status.compare("y") == 0) {
+                wants_to_play = true;
+                restart();
+                grid.num_moves = grid.n*grid.n;
+                invalid_input = false;
+            }
+            else if(play_status.compare("n") == 0) {
+                wants_to_play = false;
+                invalid_input = false;
+            }
+            else {
+                std::cout << "Invalid input!" << std::endl;
+            }
+        } while(invalid_input);
     }
 }
