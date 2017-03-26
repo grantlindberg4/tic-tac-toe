@@ -15,8 +15,9 @@ already, type 'make clean && make" to start afresh.
 
 How to run: Type './build/tictactoe' into your terminal.
 
-How to play 4x4 game: This feature has not been implemented. At this time, you
-are only able to play the normal 3x3 game.
+How to play 4x4 game: The rules are the same as before (you must get three in a
+row in any column, row, or diagonal), but this time you may win by placing
+a token in each of the four corners.
 
 1. What is inheritance in OOP and how is it used in this project:
 

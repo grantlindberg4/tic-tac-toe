@@ -31,6 +31,7 @@ bool TicTacToe::check_rows(const Grid& grid, char symbol) const {
                 break;
             }
         }
+        occurrences = 0;
     }
 
     return false;
@@ -52,6 +53,7 @@ bool TicTacToe::check_cols(const Grid& grid, char symbol) const {
                 occurrences = 0;
             }
         }
+        occurrences = 0;
     }
 
     return false;

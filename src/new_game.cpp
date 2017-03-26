@@ -16,9 +16,9 @@ NewGame::~NewGame() {}
 
 bool NewGame::check_corners(const Grid& grid, char symbol) const {
 	return grid.get_cell(0, 0) == symbol &&
-		   grid.get_cell(0, 2) == symbol &&
-		   grid.get_cell(2, 0) == symbol &&
-		   grid.get_cell(2, 2) == symbol;
+		   grid.get_cell(0, 3) == symbol &&
+		   grid.get_cell(3, 0) == symbol &&
+		   grid.get_cell(3, 3) == symbol;
 }
 
 bool NewGame::check_rows(const Grid& grid, char symbol) const {
@@ -37,6 +37,7 @@ bool NewGame::check_rows(const Grid& grid, char symbol) const {
                 occurrences = 0;
             }
         }
+        occurrences = 0;
     }
 
     return false;
@@ -59,6 +60,7 @@ bool NewGame::check_cols(const Grid& grid, char symbol) const {
                 break;
             }
         }
+        occurrences = 0;
     }
 
     return false;
@@ -85,13 +87,15 @@ bool NewGame::check_diagonals(const Grid& grid, char symbol) const {
 bool NewGame::user_won(const Grid& grid) const {
     return check_rows(grid, grid.determine_move(user_token)) ||
            check_cols(grid, grid.determine_move(user_token)) ||
-           check_diagonals(grid, grid.determine_move(user_token));
+           check_diagonals(grid, grid.determine_move(user_token)) ||
+           check_corners(grid, grid.determine_move(user_token));
 }
 
 bool NewGame::opponent_won(const Grid& grid) const {
     return check_rows(grid, grid.determine_move(opponent_token)) ||
            check_cols(grid, grid.determine_move(opponent_token)) ||
-           check_diagonals(grid, grid.determine_move(opponent_token));
+           check_diagonals(grid, grid.determine_move(opponent_token)) ||
+           check_corners(grid, grid.determine_move(user_token));
 }
 
 int NewGame::get_status() const {
