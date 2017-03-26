@@ -2,14 +2,15 @@
 #include <stdbool.h>
 #include <string.h>
 #include <sstream>
+#include <tuple>
+#include <vector>
+#include <assert.h>
 
 #include "tictactoe.h"
 
-TicTacToe::TicTacToe(int n) : GridGame(n) {
-}
+TicTacToe::TicTacToe(int n) : GridGame(n) {}
 
-TicTacToe::~TicTacToe() {
-}
+TicTacToe::~TicTacToe() {}
 
 bool TicTacToe::check_rows(char symbol) const {
     int occurrences = 0;
@@ -55,22 +56,22 @@ bool TicTacToe::check_cols(char symbol) const {
     return false;
 }
 
-bool TicTacToe::check_diagonals(char move) const {
-    return (grid.get_cell(0, 0) == move &&
-            grid.get_cell(1, 1) == move &&
-            grid.get_cell(2, 2) == move) || (grid.get_cell(0, 2) == move &&
-                                             grid.get_cell(1, 1) == move &&
-                                             grid.get_cell(2, 0) == move);
+bool TicTacToe::check_diagonals(char symbol) const {
+    return (grid.get_cell(0, 0) == symbol &&
+            grid.get_cell(1, 1) == symbol &&
+            grid.get_cell(2, 2) == symbol) || (grid.get_cell(0, 2) == symbol &&
+                                             grid.get_cell(1, 1) == symbol &&
+                                             grid.get_cell(2, 0) == symbol);
 }
 
 bool TicTacToe::user_won() const {
-    return check_rows('X') || check_cols('X') ||
-           check_diagonals('X');
+    return check_rows(grid.determine_move(player_token)) || check_cols(grid.determine_move(player_token)) ||
+           check_diagonals(grid.determine_move(player_token));
 }
 
 bool TicTacToe::opponent_won() const {
-    return check_rows('O') || check_cols('O') ||
-           check_diagonals('O');
+    return check_rows(grid.determine_move(opponent_token)) || check_cols(grid.determine_move(opponent_token)) ||
+           check_diagonals(grid.determine_move(opponent_token));
 }
 
 int TicTacToe::get_status() const {
@@ -112,28 +113,76 @@ void TicTacToe::place_mark(Player player) {
 }
 
 bool TicTacToe::invalid_coordinates(int x, int y) {
-    return x < 0 || x > 2 || y < 0 || y > 2;
+    return x < 0 || x > grid.n-1 || y < 0 || y > grid.n-1;
 }
 
-void TicTacToe::do_turn() {
-    Move curr_token;
-    switch(whose_turn) {
-        case Player::User:
-            std::cout << "Your turn" << std::endl;
-            curr_token = player_token;
-            break;
-        case Player::Opponent:
-            std::cout << "Opponent's turn" << std::endl;
-            curr_token = opponent_token;
-            break;
-        default:
-            std::cout << "Unable to determine turn" << std::endl;
+std::vector<std::tuple<int, int>> TicTacToe::filter_possible_moves(
+    std::vector<std::tuple<Grid, int, int>> possibilities
+)
+{
+    std::vector<std::tuple<Grid, int, int>>::iterator curr_possibility;
+    std::vector<std::tuple<int, int>> final_choices;
+    for(curr_possibility = possibilities.begin();
+        curr_possibility < possibilities.end();
+        curr_possibility++)
+    {
+        for(int i = 0; i < grid.n; i++) {
+            for(int j = 0; j < grid.n; j++) {
+                Grid curr_grid = std::get<0>(*curr_possibility);
+                curr_grid.set_cell(i, j, player_token);
+                if(!user_won()) {
+                    std::tuple<int, int> new_choice = std::make_tuple(std::get<1>(*curr_possibility), std::get<2>(*curr_possibility));
+                    final_choices.push_back(new_choice);
+                    curr_grid.set_cell(i, j, Move::None);
+                }
+            }
+        }
     }
+
+    return final_choices;
+}
+
+std::vector<std::tuple<int, int>> TicTacToe::find_possible_moves() {
+    std::vector<std::tuple<Grid, int, int>> test_grids;
+
+    for(int i = 0; i < grid.n; i++) {
+        for(int j = 0; j < grid.n; j++) {
+            if(grid.empty_at(i, j)) {
+                Grid test_grid = grid;
+                test_grid.set_cell(i, j, opponent_token);
+                test_grids.push_back(std::make_tuple(test_grid, i, j));
+            }
+        }
+    }
+
+    return filter_possible_moves(test_grids);
+}
+
+std::tuple<int, int> TicTacToe::find_best_move() {
+    std::vector<std::tuple<int,
+                           int>> possible_moves = find_possible_moves();
+    int location = rand() % possible_moves.size();
+
+    return std::make_tuple(std::get<0>(possible_moves.at(location)), std::get<1>(possible_moves.at(location)));
+}
+
+// If user is about to win, block him, otherwise if you can win, win
+
+void TicTacToe::do_opponent_turn() {
+    std::cout << "Opponent's turn" << std::endl;
+    std::tuple<int, int> best_move = find_best_move();
+    int row = std::get<0>(best_move);
+    int col = std::get<1>(best_move);
+    place_mark(row, col, Player::Opponent);
+}
+
+void TicTacToe::do_player_turn() {
+    std::cout << "Your turn" << std::endl;
 
     bool parsing_error = true;
     do {
         std::cout << "Enter the coordinates of the spot you wish to place "
-                  << grid.determine_move(curr_token)
+                  << grid.determine_move(player_token)
                   << " in the format (x y): ";
         std::string coords;
         std::getline(std::cin, coords);
@@ -155,12 +204,10 @@ void TicTacToe::do_turn() {
                       << std::endl;
         }
         else {
-            place_mark(x, y, whose_turn);
+            place_mark(x, y, Player::User);
             parsing_error = false;
         }
     } while(parsing_error);
-
-    grid.num_moves--;
 }
 
 void TicTacToe::configure_turn() {
@@ -223,19 +270,22 @@ void TicTacToe::run() {
 
     bool wants_to_play = true;
     while(wants_to_play) {
+        grid.num_moves = grid.n*grid.n;
         configure_turn();
         configure_token();
         while(grid.num_moves > 0) {
-            do_turn();
-            display();
-            if(get_status() != 3) {
-                break;
-            }
             if(whose_turn == Player::User) {
+                do_player_turn();
                 whose_turn = Player::Opponent;
             }
             else {
+                do_opponent_turn();
                 whose_turn = Player::User;
+            }
+            grid.num_moves--;
+            display();
+            if(get_status() != 3) {
+                break;
             }
         }
 
@@ -249,7 +299,6 @@ void TicTacToe::run() {
             if(play_status.compare("y") == 0) {
                 wants_to_play = true;
                 restart();
-                grid.num_moves = grid.n*grid.n;
                 invalid_input = false;
             }
             else if(play_status.compare("n") == 0) {

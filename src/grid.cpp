@@ -3,9 +3,16 @@
 #include "grid.h"
 
 Grid::Grid(int n) : n(n) {
-	board = new char[n];
-	num_moves = n*n;
+	board = new char[n*n];
 	clear();
+}
+
+Grid::Grid(const Grid& grid) {
+	n = grid.n;
+	board = new char[n*n];
+	for(int i = 0; i < n*n; i++) {
+		board[i] = grid.board[i];
+	}
 }
 
 Grid::~Grid() {
@@ -13,7 +20,7 @@ Grid::~Grid() {
 }
 
 bool Grid::empty_at(int row, int col) const {
-	return !(board[row*n + col] == 'X' || board[row*n + col] == 'O');
+	return !(get_cell(row, col) == 'X' || get_cell(row, col) == 'O');
 }
 
 void Grid::clear() {
@@ -33,7 +40,7 @@ char Grid::get_cell(int row, int col) const {
 	return this->board[row*n + col];
 }
 
-char Grid::determine_move(Move move) {
+char Grid::determine_move(Move move) const {
 	switch(move) {
 		case Move::X:
 			return 'X';

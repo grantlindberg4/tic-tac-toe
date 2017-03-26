@@ -281,10 +281,41 @@ void test_game() {
     game.run();
 }
 
+void test_AI() {
+    TicTacToe game(3);
+
+    game.whose_turn = Player::User;
+    game.player_token = Move::X;
+    game.opponent_token = Move::O;
+
+    game.place_mark(0, 0, Player::User);
+    game.display();
+    game.do_opponent_turn();
+    game.display();
+    std::cout << "Okay" << std::endl;
+}
+
+void test_copy_constructor() {
+    TicTacToe game1(3);
+    std::cout << "Displaying grid1" << std::endl;
+    game1.place_mark(0, 0, Player::User);
+    game1.place_mark(0, 2, Player::Opponent);
+    game1.place_mark(1, 1, Player::Opponent);
+    game1.display();
+
+    TicTacToe game2(3);
+    game2.grid = game1.grid;
+    std::cout << "Displaying grid2" << std::endl;
+    game2.display();
+}
+
 int main() {
     // test_grid();
     // test_tictactoe();
-    test_game();
+    // test_game();
+    test_AI();
+
+    // test_copy_constructor();
 
     std::cout << "All tests passed!" << std::endl;
 	return 0;
