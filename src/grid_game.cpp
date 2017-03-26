@@ -23,4 +23,5 @@ void GridGame::display() const {
 
 void GridGame::restart() {
 	grid.clear();
+	grid.num_moves = grid.n*grid.n;
 }

@@ -282,17 +282,57 @@ void test_game() {
 }
 
 void test_AI() {
-    TicTacToe game(3);
+    // Should place to block user
+    TicTacToe game1(3);
 
-    game.whose_turn = Player::User;
-    game.player_token = Move::X;
-    game.opponent_token = Move::O;
+    game1.user_token = Move::X;
+    game1.opponent_token = Move::O;
 
-    game.place_mark(0, 0, Player::User);
-    game.display();
-    game.do_opponent_turn();
-    game.display();
-    std::cout << "Okay" << std::endl;
+    game1.place_mark(0, 0, Player::User);
+    game1.place_mark(2, 0, Player::User);
+    game1.place_mark(1, 1, Player::Opponent);
+    game1.place_mark(2, 2, Player::Opponent);
+    game1.display();
+
+    game1.do_opponent_turn();
+    game1.display();
+    std::cout << "Placed to block" << std::endl;
+
+    game1.~TicTacToe();
+
+    // Should place to win
+    TicTacToe game2(3);
+
+    game2.user_token = Move::X;
+    game2.opponent_token = Move::O;
+
+    game2.place_mark(0, 0, Player::Opponent);
+    game2.place_mark(0, 2, Player::Opponent);
+    game2.place_mark(1, 1, Player::User);
+    game2.place_mark(2, 0, Player::User);
+    game2.display();
+
+    game2.do_opponent_turn();
+    game2.display();
+    std::cout << "Placed to win" << std::endl;
+
+    game2.~TicTacToe();
+
+    // Should place randomly
+    TicTacToe game3(3);
+
+    game3.user_token = Move::X;
+    game3.opponent_token = Move::O;
+
+    game3.place_mark(0, 0, Player::Opponent);
+    game3.place_mark(1, 1, Player::User);
+    game3.display();
+
+    game3.do_opponent_turn();
+    game3.display();
+    std::cout << "Placed randomly" << std::endl;
+
+    game3.~TicTacToe();
 }
 
 void test_copy_constructor() {
