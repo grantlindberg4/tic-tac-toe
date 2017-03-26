@@ -6,11 +6,11 @@ OBJS := $(addprefix build/,grid.o grid_game.o tictactoe.o)
 
 .PHONY: all
 
-all: build/3x3grid
+all: build/tictactoe
 
 .PHONY: test
 
-test: build/3x3grid_test
+test: build/tictactoe_test
 
 build:
 	mkdir -p build
@@ -20,10 +20,10 @@ $(OBJS): | build
 build/%.o: src/%.cpp
 	$(CC) $(CPPFLAGS) -c $< -o $@
 
-build/3x3grid: $(OBJS) build/3x3grid.o
+build/tictactoe: $(OBJS) build/main.o
 	$(CC) $(CPPFLAGS) $^ -o $@
 
-build/3x3grid_test: $(OBJS) build/3x3grid_test.o
+build/tictactoe_test: $(OBJS) build/tictactoe_test.o
 	$(CC) $(CPPFLAGS) $^ -o $@
 
 .PHONY: clean
