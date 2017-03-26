@@ -1,5 +1,5 @@
-#ifndef TICTACTOE_H
-#define TICTACTOE_H
+#ifndef NEW_GAME_H
+#define NEW_GAME_H
 
 #include <tuple>
 #include <vector>
@@ -8,10 +8,11 @@
 
 #define WIN_NUM 3
 
-class TicTacToe : public GridGame {
+class NewGame : public GridGame {
     bool check_rows(const Grid& grid, char symbol) const;
     bool check_cols(const Grid& grid, char symbol) const;
     bool check_diagonals(const Grid& grid, char symbol) const;
+    bool check_corners(const Grid& grid, char symbol) const;
 
     bool user_won(const Grid& grid) const;
     bool opponent_won(const Grid& grid) const;
@@ -32,8 +33,8 @@ class TicTacToe : public GridGame {
     void configure_token();
 public:
     void do_opponent_turn();
-    TicTacToe(int n);
-    ~TicTacToe();
+    NewGame(int n);
+    ~NewGame();
 
     Move user_token;
     Move opponent_token;

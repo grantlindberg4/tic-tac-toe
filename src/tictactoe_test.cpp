@@ -4,6 +4,7 @@
 #include "grid.h"
 #include "grid_game.h"
 #include "tictactoe.h"
+#include "new_game.h"
 
 void test_clear_board(Grid& grid) {
     for(int i = 0; i < grid.n; i++) {
