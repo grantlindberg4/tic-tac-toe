@@ -1,4 +1,5 @@
 #include <iostream>
+#include <stdlib.h>
 
 #include "grid.h"
 
@@ -13,6 +14,14 @@ Grid::Grid(const Grid& grid) {
 	for(int i = 0; i < n*n; i++) {
 		board[i] = grid.board[i];
 	}
+}
+
+Grid::Grid(Grid&& grid) {
+	n = grid.n;
+	board = grid.board;
+
+	grid.n = 0;
+	grid.board = nullptr;
 }
 
 Grid::~Grid() {
